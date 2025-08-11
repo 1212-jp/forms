@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Technical Solutions for blind</title>
+  <meta name="description" content="Course registration form with WhatsApp redirect">
+  <meta name="author" content="Zakki Ali">
+
+  <style>
+    :root{
+      --accent:#2193b0;
+      --accent-dark:#17677b;
+      --card-bg:#ffffff;
+      --body-bg: linear-gradient(to right, #2193b0, #6dd5ed);
+      --radius:12px;
+      --gap:12px;
+    }
+    html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--body-bg);}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{
+      width:100%;max-width:520px;background:var(--card-bg);border-radius:var(--radius);
+      box-shadow:0 6px 20px rgba(0,0,0,0.12);padding:22px;box-sizing:border-box;
+    }
+    h1{color:var(--accent);text-align:center;margin:0 0 10px;font-size:1.6rem}
+    p.lead{margin:0 0 16px;line-height:1.5;color:#222}
+    .center{display:flex;justify-content:center}
+    button, input[type="submit"], input[type="reset"]{
+      background:var(--accent);color:#fff;border:none;padding:10px 14px;border-radius:8px;
+      cursor:pointer;font-size:1rem;margin:6px;
+    }
+    button:hover,input[type="submit"]:hover,input[type="reset"]:hover{background:var(--accent-dark)}
+    form .field{margin-bottom:var(--gap)}
+    label{display:block;font-weight:600;margin-bottom:6px;color:#222}
+    input[type="text"],input[type="email"],input[type="tel"]{
+      width:100%;padding:10px;border-radius:8px;border:1px solid #cfcfcf;box-sizing:border-box;
+      font-size:0.95rem;
+    }
+    .radio-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .radio-row input{margin-right:6px}
+    .small{font-size:0.9rem;color:#444}
+    @media (max-width:520px){
+      .card{padding:16px}
+      h1{font-size:1.4rem}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" id="welcomePage">
+      <h1>Welcome Technical Solutions for blind</h1>
+      <p class="lead">
+        Join our Basic Computer Course specially crafted for beginners. You will learn keyboard orientation, efficient internet browsing, full NVDA settings and commands, and an introduction to JAWS screen reader. The joining fee is only ₹100. Last date to submit the form is 15th August. Course starts 16th August. Class timing will be 6:00 PM to 6:30 PM. Recordings will be provided and classes will be held on Zoom for your convenience.
+      </p>
+      <div class="center">
+        <button id="nextBtn" type="button">Next</button>
+      </div>
+    </div>
+
+    <div class="card" id="formPage" style="display:none;">
+      <form id="myForm" autocomplete="on" novalidate>
+        <div class="field">
+          <label for="fn">Enter your first name</label>
+          <input id="fn" name="firstName" type="text" required aria-required="true" />
+        </div>
+
+        <div class="field">
+          <label for="ln">Enter your last name</label>
+          <input id="ln" name="lastName" type="text" required aria-required="true" />
+        </div>
+
+        <div class="field">
+          <label for="email">Enter your Email</label>
+          <input id="email" name="email" type="email" required aria-required="true" />
+        </div>
+
+        <div class="field">
+          <label for="num">Enter your phone number</label>
+          <input id="num" name="phone" type="tel" pattern="[0-9+\-\s()]*" required aria-required="true" />
+          <div class="small">Use country code if available, for example 91xxxxxxxxxx</div>
+        </div>
+
+        <div class="field">
+          <label>Select your gender</label>
+          <div class="radio-row" role="radiogroup" aria-required="true" aria-label="gender">
+            <label><input type="radio" name="gender" id="male" value="Male" required> Male</label>
+            <label><input type="radio" name="gender" id="female" value="Female"> Female</label>
+            <label><input type="radio" name="gender" id="other" value="Other"> Other</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>What devices will you use for joining the class</label>
+          <div class="radio-row" role="radiogroup" aria-required="true" aria-label="device">
+            <label><input type="radio" name="device" id="smart" value="Smart phone" required> Smart phone</label>
+            <label><input type="radio" name="device" id="laptop" value="Laptop"> Laptop</label>
+            <label><input type="radio" name="device" id="both" value="Both"> Both</label>
+          </div>
+        </div>
+
+        <div class="center">
+          <input type="submit" value="Submit">
+          <input type="reset" value="Reset" id="resetBtn">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Show form when Next clicked
+    document.getElementById('nextBtn').addEventListener('click', function(){
+      document.getElementById('welcomePage').style.display = 'none';
+      document.getElementById('formPage').style.display = 'block';
+      // focus first field for accessibility
+      setTimeout(()=>document.getElementById('fn').focus(), 50);
+    });
+
+    const form = document.getElementById('myForm');
+
+    form.addEventListener('submit', function(event){
+      event.preventDefault();
+
+      // Do HTML5 validation first
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      // Build values
+      const firstName = document.getElementById('fn').value.trim();
+      const lastName = document.getElementById('ln').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('num').value.trim();
+      const genderEl = document.querySelector('input[name="gender"]:checked');
+      const deviceEl = document.querySelector('input[name="device"]:checked');
+      const gender = genderEl ? genderEl.value : 'Not specified';
+      const device = deviceEl ? deviceEl.value : 'Not specified';
+
+      // Alert to user (OK will continue)
+      alert('Hello user: your form is submitted. Thanks');
+
+      // Build message and encode
+      const messagePlain =
+`Form Submission Details:
+First Name: ${firstName}
+Last Name: ${lastName}
+Email: ${email}
+Phone: ${phone}
+Gender: ${gender}
+Device for Class: ${device}`;
+
+      const encoded = encodeURIComponent(messagePlain);
+
+      // Redirect to WhatsApp chat with your number (without +)
+      const waNumber = '918426802785';
+      const waUrl = `https://wa.me/${waNumber}?text=${encoded}`;
+
+      // Redirect
+      window.location.href = waUrl;
+    });
+
+    // Optional: when Reset pressed, go back to welcome page
+    document.getElementById('resetBtn').addEventListener('click', function(){
+      // show welcome again and hide form
+      document.getElementById('formPage').style.display = 'none';
+      document.getElementById('welcomePage').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
